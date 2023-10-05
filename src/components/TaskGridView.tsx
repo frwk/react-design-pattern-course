@@ -1,3 +1,4 @@
+import Task from '../types/Task';
 import TaskListViewProps from '../types/TaskListViewProps';
 import { Button, Card, CardActions, CardContent, Grid } from '@mui/material';
 
@@ -6,8 +7,19 @@ const TaskGridView: React.FC<TaskListViewProps> = ({ tasks, onAdd, onDelete, onT
     const handleAddTask = () => {
         const title = prompt('Entrez le nom de la nouvelle tâche:');
         if (title) {
-            onAdd(title);
+            onAdd({
+                id: tasks.length + 1,
+                title,
+                completed: false,
+            });
         }
+    };
+
+    const toggleTask = (task: Task) => {
+        onToggle({
+            ...task,
+            completed: !task.completed
+        });
     };
 
     return (
@@ -21,8 +33,8 @@ const TaskGridView: React.FC<TaskListViewProps> = ({ tasks, onAdd, onDelete, onT
                                 {task.title}
                             </CardContent>
                             <CardActions>
-                                <Button size="small" variant="contained" color="error" onClick={() => onDelete(task.id)}>Supprimer</Button>
-                                <Button size="small" variant="contained" color={task.completed ? 'error' : 'success'} onClick={() => onToggle(task.id)}>
+                                <Button size="small" variant="contained" color="error" onClick={() => onDelete(task)}>Supprimer</Button>
+                                <Button size="small" variant="contained" color={task.completed ? 'error' : 'success'} onClick={() => toggleTask(task)}>
                                     {task.completed ? 'Annuler' : 'Terminer'}
                                 </Button>
                             </CardActions>
