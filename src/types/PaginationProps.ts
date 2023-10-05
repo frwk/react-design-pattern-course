@@ -1,6 +1,5 @@
 export default interface PaginationProps {
     currentPage: number;
-    itemsPerPage: number;
-    totalItems: number;
+    totalPages: number;
     onPageChange: (page: number) => void;
 }
