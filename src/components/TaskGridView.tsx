@@ -1,22 +1,31 @@
-import React from 'react';
+import Task from '../types/Task';
 import TaskListViewProps from '../types/TaskListViewProps';
 import { Button, Card, CardActions, CardContent, Grid } from '@mui/material';
 
-class TaskGridView extends React.Component<TaskListViewProps> {
+const TaskGridView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
 
-    handleAddTask = () => {
+    const handleAddTask = () => {
         const title = prompt('Entrez le nom de la nouvelle tâche:');
         if (title) {
-            this.props.onAdd(title);
+            onAdd({
+                id: tasks.length + 1,
+                title,
+                completed: false,
+            });
         }
     };
 
-    render() {
-        const { tasks, onDelete, onToggle } = this.props;
+    const toggleTask = (task: Task) => {
+        onToggle({
+            ...task,
+            completed: !task.completed
+        });
+    };
 
-        return (
-            <div className='flex flex-col items-center gap-4'>
-                <Button variant="contained" onClick={this.handleAddTask}>Ajouter une tâche</Button>
+    return (
+        <div className='flex flex-col items-center gap-4'>
+            <Button variant="contained" onClick={handleAddTask}>Ajouter une tâche</Button>
+            {isLoading ? <p>Loading...</p> : (
                 <Grid container spacing={2}>
                     {tasks.map(task => (
                         <Grid item xs={12} sm={6} lg={4} key={task.id}>
@@ -25,8 +34,8 @@ class TaskGridView extends React.Component<TaskListViewProps> {
                                     {task.title}
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small" variant="contained" color="error" onClick={() => onDelete(task.id)}>Supprimer</Button>
-                                    <Button size="small" variant="contained" color={task.completed ? 'error' : 'success'} onClick={() => onToggle(task.id)}>
+                                    <Button size="small" variant="contained" color="error" onClick={() => onDelete(task)}>Supprimer</Button>
+                                    <Button size="small" variant="contained" color={task.completed ? 'error' : 'success'} onClick={() => toggleTask(task)}>
                                         {task.completed ? 'Annuler' : 'Terminer'}
                                     </Button>
                                 </CardActions>
@@ -34,9 +43,9 @@ class TaskGridView extends React.Component<TaskListViewProps> {
                         </Grid>
                     ))}
                 </Grid>
-            </div>
-        );
-    }
-}
+            )}
+        </div>
+    );
+};
 
 export default TaskGridView;

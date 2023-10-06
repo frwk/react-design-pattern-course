@@ -1,58 +1,35 @@
-import React from 'react';
-import Task from '../types/Task';
-import TaskListContainerState from '../types/TaskListContainerState';
-import FilteredTaskList from './FilteredTask';
-import TaskListView from './TaskListView';
+import FilteredTask from "../components/FilteredTask";
+import TaskListView from "../components/TaskListView";
+import usePagination from '../hooks/usePagination';
+import Pagination from './Pagination';
+import useTaskManager from '../hooks/useTaskManager';
+import useTaskFilter from '../hooks/useTaskFilter';
 
-class TaskListContainer extends React.Component<{}, TaskListContainerState> {
+const TaskListContainer = () => {
+    const { tasks, addTask, removeTask, updateTask, isLoading } = useTaskManager();
+    const { filteredTasks, filter, setFilter } = useTaskFilter(tasks);
+    const { slicedItems, currentPage, totalPages, handlePageChange } = usePagination(filteredTasks, 10);
 
-    state: TaskListContainerState = {
-        tasks: []
-    };
-
-    async componentDidMount(): Promise<void> {
-        const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=50');
-        const data = await res.json();
-        this.setState({ tasks: data });
-    }
-
-    addTask = (title: string) => {
-        const newTask: Task = {
-            id: this.state.tasks[this.state.tasks.length - 1].id + 1,
-            title: title,
-            completed: false
-        };
-        this.setState({ tasks: [...this.state.tasks, newTask] });
-    };
-
-    deleteTask = (id: number) => {
-        const updatedTasks = this.state.tasks.filter(task => task.id !== id);
-        this.setState({ tasks: updatedTasks });
-    };
-
-    toggleTask = (id: number) => {
-        const updatedTasks = this.state.tasks.map(task =>
-            task.id === id ? { ...task, completed: !task.completed } : task
-        );
-        this.setState({ tasks: updatedTasks });
-    };
-
-    render() {
-        return (
+    return (
+        <FilteredTask filter={filter} setFilter={setFilter}>
             <>
-                <FilteredTaskList tasks={this.state.tasks} render={(filteredTasks: Task[]) => (
-                    <TaskListView 
-                        tasks={filteredTasks} 
-                        onAdd={this.addTask} 
-                        onDelete={this.deleteTask} 
-                        onToggle={this.toggleTask}
-                        totalItems={filteredTasks.length}
+                <TaskListView
+                    tasks={slicedItems}
+                    onAdd={addTask}
+                    onDelete={removeTask}
+                    onToggle={updateTask}
+                    isLoading={isLoading}
+                />
+                {isLoading ? null : (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
                     />
-                )}/>
+                )}
             </>
-
-        );
-    }
-}
+        </FilteredTask>
+    );
+};
 
 export default TaskListContainer;
