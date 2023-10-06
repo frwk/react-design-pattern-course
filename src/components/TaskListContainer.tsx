@@ -1,8 +1,7 @@
 import React from 'react';
-import TaskListView from './TaskListView';
 import Task from '../types/Task';
 import TaskListContainerState from '../types/TaskListContainerState';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import FilteredTask from './FilteredTask';
 
 class TaskListContainer extends React.Component<{}, TaskListContainerState> {
 
@@ -11,13 +10,7 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
             { id: 1, title: 'Première tâche', completed: false },
             { id: 2, title: 'Deuxième tâche', completed: true }
         ],
-        filter: 'all',
     };
-
-    setFilter = (filter: string) => {
-        this.setState({ filter });
-    };
-
 
     addTask = (title: string) => {
         const newTask: Task = {
@@ -29,50 +22,21 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
     };
 
     deleteTask = (id: number) => {
-        const updatedTasks = this.state.tasks.filter((task: Task) => task.id !== id);
+        const updatedTasks = this.state.tasks.filter(task => task.id !== id);
         this.setState({ tasks: updatedTasks });
     };
 
     toggleTask = (id: number) => {
-        const updatedTasks = this.state.tasks.map((task: Task) =>
+        const updatedTasks = this.state.tasks.map(task =>
             task.id === id ? { ...task, completed: !task.completed } : task
         );
         this.setState({ tasks: updatedTasks });
     };
 
-    getFilteredTasks = (): Task[] => {
-        switch (this.state.filter) {
-            case 'completed':
-                return this.state.tasks.filter(task => task.completed);
-            case 'notCompleted':
-                return this.state.tasks.filter(task => !task.completed);
-            default:
-                return this.state.tasks;
-        }
-    };
-
     render() {
         return (
             <>
-                <FormControl fullWidth>
-                    <InputLabel id="filter-select-label">Filtre</InputLabel>
-                    <Select
-                        labelId="filter-select-label"
-                        value={this.state.filter}
-                        label="Filtre"
-                        onChange={(e) => this.setFilter(e.target.value as string)}
-                    >
-                        <MenuItem value='all'>Tout</MenuItem>
-                        <MenuItem value='completed'>Completées</MenuItem>
-                        <MenuItem value='notCompleted'>Non completées</MenuItem>
-                    </Select>
-                </FormControl>
-                <TaskListView
-                    tasks={this.getFilteredTasks()}
-                    onAdd={this.addTask}
-                    onDelete={this.deleteTask}
-                    onToggle={this.toggleTask}
-                />
+                <FilteredTask tasks={this.state.tasks} />
             </>
         );
     }
