@@ -2,6 +2,7 @@ import Task from "../types/Task";
 import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import useUserContext from "./useUserContext";
+import taskObservable from "../observables/taskObservable";
 
 const useTaskManager = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -17,6 +18,7 @@ const useTaskManager = () => {
         return;
       }
       setTasks(data);
+      taskObservable.notify({ message: 'Tasks loaded', severity: 'success', tasks: data });
     }
     if (error) {
       console.error(error);
@@ -24,23 +26,21 @@ const useTaskManager = () => {
   }, [data, error, user]);
 
   const addTask = (task: Task) => {
-    setTasks([...tasks, task]);
+    const updatedTasks = [...tasks, task];
+    setTasks(updatedTasks);
+    taskObservable.notify({ message: `Task "${task.title}" added`, severity: 'success', tasks: updatedTasks });
   };
 
   const removeTask = (task: Task) => {
-    setTasks(tasks.filter((t) => t.id !== task.id));
+    const updatedTasks = tasks.filter((t) => t.id !== task.id)
+    setTasks(updatedTasks);
+    taskObservable.notify({ message: `Task "${task.title}" removed`, severity: 'info', tasks: updatedTasks });
   };
 
   const updateTask = (task: Task) => {
-    setTasks(
-      tasks.map((t) => {
-        if (t.id === task.id) {
-          return task;
-        }
-
-        return t;
-      })
-    );
+    const updatedTasks = tasks.map((t) => t.id === task.id ? task : t);
+    setTasks(updatedTasks);
+    taskObservable.notify({ message: `Task "${task.title}" updated`, severity: 'info', tasks: updatedTasks });
   }
 
   return {
