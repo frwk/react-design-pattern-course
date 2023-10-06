@@ -1,11 +1,7 @@
 import { CssBaseline, PaletteMode, ThemeProvider, createTheme } from '@mui/material'
 import Home from './pages/Home';
-import User from './types/User/User';
-import { createContext, useEffect, useState } from 'react';
 import Header from './components/layout/Header';
-import { useFetch } from './hooks/useFetch';
-
-export const UserContext = createContext<User | null>(null);
+import UserProvider from './components/providers/UserProvider';
 
 function App() {
 
@@ -22,28 +18,13 @@ function App() {
 
   const theme = createTheme(getDesignTokens('dark'));
 
-  const [user, setUser] = useState<User | null>(null);
-  const { data, error }: {data: User | null, error: any} = useFetch({ endpoint: 'users/1' });
-
-  useEffect(() => {
-    if (data) {
-      setUser(data);
-    }
-    if (error) {
-      console.error(error);
-    }
-    return () => {
-      setUser(null);
-    }
-  }, [data, error]);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
-        <UserContext.Provider value={user}>
-          <Header user={user}/>
+        <UserProvider>
+          <Header/>
           <Home />
-        </UserContext.Provider>
+        </UserProvider>
       </CssBaseline>
     </ThemeProvider>
   )

@@ -2,9 +2,12 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import User from '../../types/User/User';
+import useUserContext from '../../hooks/useUserContext';
 
-const Header = ({user} : {user: User | null}) => {
+const Header = () => {
+
+    const user = useUserContext();
+
     return (
         <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" enableColorOnDark>
