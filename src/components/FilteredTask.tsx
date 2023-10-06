@@ -1,8 +1,8 @@
 import React from 'react';
-import Task from "../types/Task.ts";
 import {Button} from "@mui/material";
+import FilteredTaskProps from "../types/FilteredTaskProps.ts";
 
-class FilteredTaskList extends React.Component<{ tasks: Task[]}> {
+class FilteredTaskList extends React.Component<FilteredTaskProps> {
     state = {
         tasks: [],
         filter: 'all', // par défaut, affiche toutes les tâches
@@ -26,11 +26,7 @@ class FilteredTaskList extends React.Component<{ tasks: Task[]}> {
     render() {
         return (
             <>
-                {this.getFilteredTasks().map((task) => (
-                    <li key={task.id} className={task.completed ? 'completed' : 'incomplete'}>
-                        {task.title}
-                    </li>
-                ))}
+                { this.props.render(this.getFilteredTasks())}
                 <div className='flex justify-center gap-2'>
                     <Button variant='contained' color='success' onClick={() => this.setFilter('all')}>Toutes les tâches</Button>
                     <Button variant='contained' color='primary' onClick={() => this.setFilter('completed')}>Complètes</Button>

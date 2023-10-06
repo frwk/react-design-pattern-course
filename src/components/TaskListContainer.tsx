@@ -2,6 +2,7 @@ import React from 'react';
 import Task from '../types/Task';
 import TaskListContainerState from '../types/TaskListContainerState';
 import FilteredTask from "./FilteredTask.tsx";
+import TaskListView from "./TaskListView.tsx";
 
 class TaskListContainer extends React.Component<{}, TaskListContainerState> {
 
@@ -36,7 +37,9 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
     render() {
         return (
             <>
-                <FilteredTask tasks={this.state.tasks} />
+                <FilteredTask tasks={this.state.tasks} render={(filteredTask: Task[]) => (
+                    <TaskListView tasks={filteredTask} onAdd={this.addTask} onDelete={this.deleteTask} onToggle={this.toggleTask}/>
+                )} />
             </>
         );
     }
