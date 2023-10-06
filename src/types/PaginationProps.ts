@@ -3,5 +3,4 @@ export default interface PaginationProps {
     itemsPerPage?: number;
     totalItems: number;
     onPageChange?: (page: number) => void;
-    items: unknown[];
 }

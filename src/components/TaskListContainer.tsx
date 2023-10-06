@@ -1,58 +1,57 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Task from '../types/Task';
 import TaskListContainerState from '../types/TaskListContainerState';
-import FilteredTaskList from './FilteredTask';
-import TaskListView from './TaskListView';
+import FilteredTask from "../components/FilteredTask";
+import TaskListView from "../components/TaskListView";
 
-class TaskListContainer extends React.Component<{}, TaskListContainerState> {
+const TaskListContainer: React.FC<TaskListContainerState> = () => {
+    const [tasks, setTasks] = useState<Task[]>([]);
 
-    state: TaskListContainerState = {
-        tasks: []
-    };
+    useEffect(() => {
+        const fetchTasks = async () => {
+            const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=50');
+            const data = await res.json();
+            setTasks(data);
+        };
 
-    async componentDidMount(): Promise<void> {
-        const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=50');
-        const data = await res.json();
-        this.setState({ tasks: data });
-    }
+        fetchTasks();
+    }, []);
 
-    addTask = (title: string) => {
+    const addTask = (title: string) => {
         const newTask: Task = {
-            id: this.state.tasks[this.state.tasks.length - 1].id + 1,
+            id: tasks[tasks.length - 1].id + 1,
             title: title,
             completed: false
         };
-        this.setState({ tasks: [...this.state.tasks, newTask] });
+        setTasks([...tasks, newTask]);
     };
 
-    deleteTask = (id: number) => {
-        const updatedTasks = this.state.tasks.filter(task => task.id !== id);
-        this.setState({ tasks: updatedTasks });
+    const deleteTask = (id: number) => {
+        const updatedTasks = tasks.filter(task => task.id !== id);
+        setTasks(updatedTasks);
     };
 
-    toggleTask = (id: number) => {
-        const updatedTasks = this.state.tasks.map(task =>
+    const toggleTask = (id: number) => {
+        const updatedTasks = tasks.map(task =>
             task.id === id ? { ...task, completed: !task.completed } : task
         );
-        this.setState({ tasks: updatedTasks });
+        setTasks(updatedTasks);
     };
 
-    render() {
-        return (
-            <>
-                <FilteredTaskList tasks={this.state.tasks} render={(filteredTasks: Task[]) => (
-                    <TaskListView 
-                        items={filteredTasks} 
-                        onAdd={this.addTask} 
-                        onDelete={this.deleteTask} 
-                        onToggle={this.toggleTask}
-                        totalItems={filteredTasks.length}
-                    />
-                )}/>
-            </>
+    return (
+        <>
+            <FilteredTask tasks={tasks} render={(filteredTasks: Task[]) => (
+                <TaskListView 
+                    tasks={filteredTasks} 
+                    onAdd={addTask} 
+                    onDelete={deleteTask} 
+                    onToggle={toggleTask}
+                    totalItems={filteredTasks.length}
+                />
+            )}/>
+        </>
 
-        );
-    }
-}
+    );
+};
 
 export default TaskListContainer;
