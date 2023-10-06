@@ -1,19 +1,23 @@
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { CssBaseline, PaletteMode, ThemeProvider, createTheme } from '@mui/material'
 import Home from './pages/Home';
 
 function App() {
 
-  const darkTheme = createTheme({
+  const getDesignTokens = (mode: PaletteMode) => ({
     palette: {
-      mode: 'dark',
-      background: {
-        default: '#111827',
-      },
+      mode,
+      ...(mode === 'dark' ? {
+        background: {
+          default: '#111827',
+        },
+      } : {}),
     },
   });
 
+  const theme = createTheme(getDesignTokens('dark'));
+
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline>
         <Home />
       </CssBaseline>
@@ -21,4 +25,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
