@@ -26,12 +26,12 @@ class FilteredTaskList extends React.Component<FilteredTaskProps> {
     render() {
         return (
             <>
-                { this.props.render(this.getFilteredTasks())}
                 <div className='flex justify-center gap-2'>
                     <Button variant='contained' color='success' onClick={() => this.setFilter('all')}>Toutes les tâches</Button>
                     <Button variant='contained' color='primary' onClick={() => this.setFilter('completed')}>Complètes</Button>
                     <Button variant='contained' color='error' onClick={() => this.setFilter('notCompleted')}>Incomplètes</Button>
                 </div>
+                { this.props.render(this.getFilteredTasks())}
             </>
         );
     }
