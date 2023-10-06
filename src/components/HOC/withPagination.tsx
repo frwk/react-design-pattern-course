@@ -1,72 +1,53 @@
-import { Button } from '@mui/material';
-import { Component, ComponentType } from 'react';
 import PaginationProps from '../../types/PaginationProps';
-import PaginationState from '../../types/PaginationState';
+import { Button } from '@mui/material';
+import { useState } from 'react';
 
-export default function withPagination<WrappedComponentProps extends object>(
-    WrappedComponent: ComponentType<WrappedComponentProps>,
+function withPagination<WrappedComponentProps extends object>(
+    WrappedComponent: React.ComponentType<WrappedComponentProps>
 ) {
 
-    return class WithPagination extends Component<WrappedComponentProps & PaginationProps, PaginationState> {
-        static defaultProps = {
-            itemsPerPage: 10
+    const WithPagination = ({ totalItems, itemsPerPage = 10, ...props }: WrappedComponentProps & PaginationProps) => {
+        const [currentPage, setCurrentPage] = useState(1);
+
+        totalItems = totalItems ?? 0;
+
+        const totalPages = Math.ceil(totalItems! / itemsPerPage);
+
+        const handlePageChange = (page: number) => {
+            if (page < 1 || page > totalPages) return;
+            setCurrentPage(page);
         };
 
-        constructor(props: WrappedComponentProps & PaginationProps) {
-            super(props);
-            this.state = {
-                currentPage: 1,
-            };
-        }
-
-        get totalPages() {
-            const { totalItems, itemsPerPage } = this.props;
-            return Math.ceil(totalItems / itemsPerPage!);
-        }
-
-        filterItems = () => {
-            const { items } = this.props;
-            return items.slice((this.state.currentPage - 1) * this.props.itemsPerPage!, this.state.currentPage * this.props.itemsPerPage!);
-          };
-
-        onPageChange = (page: number) => {
-            if (page < 1 || page > this.totalPages) return;
-            this.setState({ currentPage: page });
-        };
-
-        render() {
-            const { currentPage } = this.state;
-            const { totalItems, itemsPerPage } = this.props;
-
-            return (
-                <>
-                    <WrappedComponent
-                        {...this.props as WrappedComponentProps}
-                        currentPage={currentPage}
-                        itemsPerPage={itemsPerPage}
-                        totalItems={totalItems}
-                        onPageChange={this.onPageChange}
-                        items={this.filterItems()}
-                    />
-                    <div className="flex justify-between items-center w-full">
-                        <Button
-                            variant='contained'
-                            onClick={() => this.onPageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            Précédent
-                        </Button>
-                        <span className='select-none'>{currentPage} sur {this.totalPages}</span>
-                        <Button
-                            variant='contained'
-                            onClick={() => this.onPageChange(currentPage + 1)}
-                            disabled={currentPage === this.totalPages}
-                        >
-                            Suivant
-                        </Button>
-                    </div>
-                </>
-            );
-        }
+        return (
+            <>
+                <WrappedComponent
+                    {...props as WrappedComponentProps}
+                    currentPage={currentPage}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                />
+                <div className="flex justify-between items-center w-full">
+                    <Button
+                        variant='contained'
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Précédent
+                    </Button>
+                    <span className='select-none'>{currentPage} sur {totalPages}</span>
+                    <Button
+                        variant='contained'
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Suivant
+                    </Button>
+                </div>
+            </>
+        );
     };
+
+    return WithPagination;
 }
+
+export default withPagination;
