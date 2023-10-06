@@ -2,12 +2,11 @@ import TaskListViewProps from '../types/TaskListViewProps';
 import { Button, Checkbox, IconButton, List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Task from '../types/Task';
-import { useContext } from 'react';
-import { UserContext } from '../App';
+import useUserContext from '../hooks/useUserContext';
 
 const TaskListView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
 
-  const user = useContext(UserContext);
+  const user = useUserContext();
 
   const handleAddTask = () => {
     if (!user) return;
