@@ -1,21 +1,7 @@
-import { useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import FilteredTaskProps from '../types/FilteredTaskProps';
 
-const FilteredTaskList: React.FC<FilteredTaskProps> = ({ tasks, render }) => {
-    const [filter, setFilter] = useState('all'); // par défaut, affiche toutes les tâches
-
-    const getFilteredTasks = () => {
-        switch (filter) {
-            case 'completed':
-                return tasks.filter(task => task.completed);
-            case 'notCompleted':
-                return tasks.filter(task => !task.completed);
-            default:
-                return tasks;
-        }
-    };
-
+const FilteredTaskList = ({ filter, setFilter, children }: FilteredTaskProps) => {
     return (
         <>
             <FormControl fullWidth>
@@ -31,7 +17,7 @@ const FilteredTaskList: React.FC<FilteredTaskProps> = ({ tasks, render }) => {
                     <MenuItem value='notCompleted'>Non completées</MenuItem>
                 </Select>
             </FormControl>
-            {render(getFilteredTasks())}
+            {children}
         </>
     );
 };

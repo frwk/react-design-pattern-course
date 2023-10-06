@@ -28,7 +28,7 @@ const TaskListView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListV
       <Button variant="contained" onClick={handleAddTask}>Ajouter une tâche</Button>
       {isLoading ? <p>Loading...</p> : (
         <List>
-          {tasks.map((task: any) => (
+          {tasks.map((task) => (
             <ListItem key={task.id}>
               <ListItemIcon>
                 <Checkbox
