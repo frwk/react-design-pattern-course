@@ -2,6 +2,7 @@ import React from 'react';
 import TaskListView from './TaskListView';
 import Task from '../types/Task';
 import TaskListContainerState from '../types/TaskListContainerState';
+import {Button} from "@mui/material";
 
 class TaskListContainer extends React.Component<{}, TaskListContainerState> {
 
@@ -9,7 +10,8 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
         tasks: [
             { id: 1, title: 'Première tâche', completed: false },
             { id: 2, title: 'Deuxième tâche', completed: true }
-        ]
+        ],
+         filter: 'all'
     };
 
     addTask = (title: string) => {
@@ -34,14 +36,37 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
         this.setState({ tasks: updatedTasks });
     };
 
+    setFilter = (filter: string) => {
+        this.setState({ filter });
+    };
+
+    getFilteredTasks = (): Task[] => {
+        switch (this.state.filter) {
+            case 'completed':
+                return this.state.tasks.filter(task => task.completed);
+            case 'notCompleted':
+                return this.state.tasks.filter(task => !task.completed);
+            default:
+                return this.state.tasks;
+        }
+    };
+
     render() {
         return (
-            <TaskListView 
-                tasks={this.state.tasks} 
-                onAdd={this.addTask} 
-                onDelete={this.deleteTask} 
-                onToggle={this.toggleTask}
-            />
+            <>
+                <TaskListView
+                    tasks={this.getFilteredTasks()}
+                    onAdd={this.addTask}
+                    onDelete={this.deleteTask}
+                    onToggle={this.toggleTask}
+                />
+                <div className='flex justify-center gap-2'>
+                    <Button variant='contained' color="secondary" onClick={() => this.setFilter('all')}>Toutes les tâches</Button>
+                    <Button variant='contained' color="success" onClick={() => this.setFilter('completed')}>Complètes</Button>
+                    <Button variant='contained' color="error" onClick={() => this.setFilter('notCompleted')}>Incomplètes</Button>
+                </div>
+            </>
+
         );
     }
 }
