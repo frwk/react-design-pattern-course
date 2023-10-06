@@ -1,7 +1,8 @@
 import React from 'react';
-import TaskListView from './TaskListView';
 import Task from '../types/Task';
 import TaskListContainerState from '../types/TaskListContainerState';
+import FilteredTask from "./FilteredTask.tsx";
+import TaskListView from "./TaskListView.tsx";
 
 class TaskListContainer extends React.Component<{}, TaskListContainerState> {
 
@@ -9,7 +10,7 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
         tasks: [
             { id: 1, title: 'Première tâche', completed: false },
             { id: 2, title: 'Deuxième tâche', completed: true }
-        ]
+        ],
     };
 
     addTask = (title: string) => {
@@ -33,15 +34,13 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
         );
         this.setState({ tasks: updatedTasks });
     };
-
     render() {
         return (
-            <TaskListView 
-                tasks={this.state.tasks} 
-                onAdd={this.addTask} 
-                onDelete={this.deleteTask} 
-                onToggle={this.toggleTask}
-            />
+            <>
+                <FilteredTask tasks={this.state.tasks} render={(filteredTask: Task[]) => (
+                    <TaskListView tasks={filteredTask} onAdd={this.addTask} onDelete={this.deleteTask} onToggle={this.toggleTask}/>
+                )} />
+            </>
         );
     }
 }
