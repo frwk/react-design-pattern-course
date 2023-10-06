@@ -1,8 +1,12 @@
+import { useContext } from 'react';
 import Task from '../types/Task';
 import TaskListViewProps from '../types/TaskListViewProps';
 import { Button, Card, CardActions, CardContent, Grid, Tooltip } from '@mui/material';
+import { UserContext } from '../App';
 
-const TaskGridView = ({ tasks, onAdd, onDelete, onToggle, isLoading, user }: TaskListViewProps) => {
+const TaskGridView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
+
+    const user = useContext(UserContext);
 
     const handleAddTask = () => {
         if (!user) return;

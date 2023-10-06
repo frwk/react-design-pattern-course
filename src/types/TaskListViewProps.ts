@@ -1,5 +1,4 @@
 import Task from "./Task";
-import User from "./User/User";
 
 export default interface TaskListViewProps {
     tasks: Task[];
@@ -7,5 +6,4 @@ export default interface TaskListViewProps {
     onDelete: (task: Task) => void;
     onToggle: (task: Task) => void;
     isLoading: boolean;
-    user: User | null;
 }

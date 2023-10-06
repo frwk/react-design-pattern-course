@@ -42,7 +42,7 @@ function App() {
       <CssBaseline>
         <UserContext.Provider value={user}>
           <Header user={user}/>
-          <Home user={user} />
+          <Home />
         </UserContext.Provider>
       </CssBaseline>
     </ThemeProvider>
