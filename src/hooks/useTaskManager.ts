@@ -1,13 +1,13 @@
 import Task from "../types/Task";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
-import { UserContext } from "../App";
+import useUserContext from "./useUserContext";
 
 const useTaskManager = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const { data, error, isLoading }: {data: Task[], error: any, isLoading: boolean} = useFetch({ endpoint: 'todos?_limit=50' });
   
-  const user = React.useContext(UserContext);
+  const user = useUserContext();
 
   useEffect(() => {
     if (data) {
