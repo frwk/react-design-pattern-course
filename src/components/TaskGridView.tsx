@@ -12,13 +12,13 @@ class TaskGridView extends React.Component<TaskListViewProps> {
     };
 
     render() {
-        const { tasks, onDelete, onToggle } = this.props;
+        const { items, onDelete, onToggle } = this.props;
 
         return (
             <div className='flex flex-col items-center gap-4'>
                 <Button variant="contained" onClick={this.handleAddTask}>Ajouter une tâche</Button>
                 <Grid container spacing={2}>
-                    {tasks.map(task => (
+                    {items.map(task => (
                         <Grid item xs={12} sm={6} lg={4} key={task.id}>
                             <Card variant="outlined" className={task.completed ? 'bg-green-500' : ''}>
                                 <CardContent>

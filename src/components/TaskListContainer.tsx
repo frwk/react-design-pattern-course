@@ -1,17 +1,20 @@
 import React from 'react';
 import Task from '../types/Task';
 import TaskListContainerState from '../types/TaskListContainerState';
-import FilteredTask from "./FilteredTask.tsx";
-import TaskListView from "./TaskListView.tsx";
+import FilteredTaskList from './FilteredTask';
+import TaskListView from './TaskListView';
 
 class TaskListContainer extends React.Component<{}, TaskListContainerState> {
 
     state: TaskListContainerState = {
-        tasks: [
-            { id: 1, title: 'Première tâche', completed: false },
-            { id: 2, title: 'Deuxième tâche', completed: true }
-        ],
+        tasks: []
     };
+
+    async componentDidMount(): Promise<void> {
+        const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=50');
+        const data = await res.json();
+        this.setState({ tasks: data });
+    }
 
     addTask = (title: string) => {
         const newTask: Task = {
@@ -20,7 +23,6 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
             completed: false
         };
         this.setState({ tasks: [...this.state.tasks, newTask] });
-        console.log(this.state.tasks);
     };
 
     deleteTask = (id: number) => {
@@ -34,13 +36,21 @@ class TaskListContainer extends React.Component<{}, TaskListContainerState> {
         );
         this.setState({ tasks: updatedTasks });
     };
+
     render() {
         return (
             <>
-                <FilteredTask tasks={this.state.tasks} render={(filteredTask: Task[]) => (
-                    <TaskListView tasks={filteredTask} onAdd={this.addTask} onDelete={this.deleteTask} onToggle={this.toggleTask}/>
-                )} />
+                <FilteredTaskList tasks={this.state.tasks} render={(filteredTasks: Task[]) => (
+                    <TaskListView 
+                        items={filteredTasks} 
+                        onAdd={this.addTask} 
+                        onDelete={this.deleteTask} 
+                        onToggle={this.toggleTask}
+                        totalItems={filteredTasks.length}
+                    />
+                )}/>
             </>
+
         );
     }
 }
