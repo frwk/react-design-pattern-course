@@ -1,4 +1,5 @@
 import TaskListContainer from "../components/TaskListContainer"
+import TaskOverview from "../components/TaskOverview"
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
         <h1 className="text-center text-xl md:text-2xl lg:text-4xl font-bold mb-3">Todo app</h1>
         <p className="text-center mb-4">Apprendre les design patterns via une todo app</p>
         <div className="space-y-4">
+          <TaskOverview />
           <TaskListContainer />
         </div>
       </section>
