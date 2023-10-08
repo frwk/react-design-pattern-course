@@ -1,17 +1,19 @@
 import TaskListViewProps from '../types/TaskListViewProps';
-import { Button, Checkbox, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Button, Checkbox, IconButton, List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Task from '../types/Task';
 
-const TaskListView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
+const TaskListView = ({ tasks, onAdd, onDelete, onToggle, isLoading, user }: TaskListViewProps) => {
 
   const handleAddTask = () => {
+    if (!user) return;
     const title = prompt('Entrez le nom de la nouvelle tâche:');
     if (title) {
       onAdd({
         id: tasks.length + 1,
         title,
-        completed: false
+        completed: false,
+        userId: user.id
       });
     }
   };
@@ -25,7 +27,11 @@ const TaskListView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListV
 
   return (
     <div className='flex flex-col items-center'>
-      <Button variant="contained" onClick={handleAddTask}>Ajouter une tâche</Button>
+      <Tooltip placement="top" title={user ? null : 'Vous devez être connecté pour ajouter une tâche'}>
+        <span>
+            <Button variant="contained" onClick={handleAddTask} disabled={!user}>Ajouter une tâche</Button>
+        </span>
+      </Tooltip>
       {isLoading ? <p>Loading...</p> : (
         <List>
           {tasks.map((task) => (

@@ -2,9 +2,9 @@ import FetchProps from "../types/FetchProps";
 import { useEffect, useState } from "react";
 
 export const useFetch = ({ endpoint, options = {} }: FetchProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<any>(null);
 
   useEffect(() => {
     const abortController = new AbortController();

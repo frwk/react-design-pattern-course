@@ -1,19 +1,27 @@
 import Task from "../types/Task";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
+import { UserContext } from "../App";
 
 const useTaskManager = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const { data, error, isLoading } = useFetch({ endpoint: 'todos?_limit=50' });
+  const { data, error, isLoading }: {data: Task[], error: any, isLoading: boolean} = useFetch({ endpoint: 'todos?_limit=50' });
+  
+  const user = React.useContext(UserContext);
 
   useEffect(() => {
     if (data) {
+      if (user) {
+        const filteredData = data.filter((task: Task) => task.userId === user.id);
+        setTasks(filteredData);
+        return;
+      }
       setTasks(data);
     }
     if (error) {
       console.error(error);
     }
-  }, [data, error]);
+  }, [data, error, user]);
 
   const addTask = (task: Task) => {
     setTasks([...tasks, task]);
