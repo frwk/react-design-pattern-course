@@ -3,7 +3,7 @@ import TaskListViewProps from '../types/TaskListViewProps';
 import { Button, Card, CardActions, CardContent, Grid, Tooltip } from '@mui/material';
 import useUserContext from '../hooks/useUserContext';
 
-const TaskGridView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
+const TaskGridView = ({ tasks, nextTaskId, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
 
     const user = useUserContext();
 
@@ -12,7 +12,7 @@ const TaskGridView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListV
         const title = prompt('Entrez le nom de la nouvelle tâche:');
         if (title) {
             onAdd({
-                id: tasks.length + 1,
+                id: nextTaskId,
                 title,
                 completed: false,
                 userId: user.id

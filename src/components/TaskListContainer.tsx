@@ -21,6 +21,7 @@ const TaskListContainer = () => {
             <>
                 <TaskListView
                     tasks={slicedItems as Task[]}
+                    nextTaskId={tasks[tasks.length - 1]?.id + 1 || 1}
                     onAdd={addTask}
                     onDelete={removeTask}
                     onToggle={updateTask}
