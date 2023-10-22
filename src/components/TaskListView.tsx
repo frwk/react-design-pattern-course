@@ -40,7 +40,7 @@ const TaskListView = ({ tasks, nextTaskId, onAdd, onAddCategory, onDelete, onTog
     <div className='flex flex-col items-center'>
       <Tooltip placement="top" title={user ? null : 'Vous devez être connecté pour ajouter une tâche'}>
         <span>
-            <Button variant="contained" onClick={handleAddTask} disabled={!user}>Ajouter une tâche</Button>
+          <Button variant="contained" onClick={handleAddTask} disabled={!user}>Ajouter une tâche</Button>
         </span>
       </Tooltip>
       {isLoading ? <p>Loading...</p> : (
@@ -59,11 +59,11 @@ const TaskListView = ({ tasks, nextTaskId, onAdd, onAddCategory, onDelete, onTog
                 style={{ textDecoration: task.completed ? 'line-through' : 'none', userSelect: 'none' }}
                 onClick={() => toggleTask(task)}
               >
-                {task.title}
+                <div className='flex gap-2 items-center'>
+                  <span>{task.title}</span>
+                  {task.category && <Chip label={task.category} size="small" />}
+                </div>
               </ListItemText>
-              { task.category && (
-                <Chip label={task.category} size="small" />
-              )}
               <IconButton color="error" onClick={() => onDelete(task)}>
                 <DeleteIcon />
               </IconButton>

@@ -5,14 +5,8 @@ const useCategoryManager = () => {
     const [categories, setCategories] = useState<Category[]>([]);
 
     const addCategory = (category: Category) => {
-        const existingCategory = categories.map(cat => {
-            return cat.title === category.title
-        })
-
-        if (existingCategory) {
-            return existingCategory;
-        }
-
+        const existingCategory = categories.some((cat) => cat.title === category.title);
+        if (existingCategory) return existingCategory;
         setCategories([...categories, category]);
     }
 
