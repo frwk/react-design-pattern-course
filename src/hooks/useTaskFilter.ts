@@ -1,25 +1,35 @@
 import Task from "../types/Task";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const useTaskFilter = (tasks: Task[]) => {
+const useFilter = (tasks: Task[]) => {
   const [filter, setFilter] = useState('all'); // par défaut, affiche toutes les tâches
+  const [filteredTasks, setFilteredTasks] = useState(tasks);
 
-  const getFilteredTasks = () => {
-    switch (filter) {
-      case 'completed':
-        return tasks.filter(task => task.completed);
-      case 'notCompleted':
-        return tasks.filter(task => !task.completed);
-      default:
-        return tasks;
+  useEffect(() => {
+    const filterTasks = () => {
+      switch (filter) {
+        case 'completed':
+          setFilteredTasks(tasks.filter(task => task.completed));
+          break;
+        case 'notCompleted':
+          setFilteredTasks(tasks.filter(task => !task.completed));
+          break;
+        default:
+          setFilteredTasks(tasks);
+      }
     }
-  };
+    filterTasks();
+
+    return () => {
+      setFilteredTasks([]);
+    }
+  }, [filter, tasks]);
 
   return {
     filter,
     setFilter,
-    filteredTasks: getFilteredTasks(),
+    filteredTasks,
   };
 }
 
-export default useTaskFilter;
+export default useFilter;
