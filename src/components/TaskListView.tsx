@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Task from '../types/Task';
 import useUserContext from '../hooks/useUserContext';
 
-const TaskListView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
+const TaskListView = ({ tasks, nextTaskId, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
 
   const user = useUserContext();
 
@@ -13,7 +13,7 @@ const TaskListView = ({ tasks, onAdd, onDelete, onToggle, isLoading }: TaskListV
     const title = prompt('Entrez le nom de la nouvelle tâche:');
     if (title) {
       onAdd({
-        id: tasks.length + 1,
+        id: nextTaskId,
         title,
         completed: false,
         userId: user.id
