@@ -6,9 +6,11 @@ import useTaskFilter from '../hooks/useTaskFilter';
 import useTaskManager from '../hooks/useTaskManager';
 import Pagination from './Pagination';
 import Task from "../types/Task";
+import useCategoryManager from "../hooks/useCategoryManager.ts";
 
 const TaskListContainer = () => {
     const { tasks, addTask, removeTask, updateTask, isLoading } = useTaskManager();
+    const { addCategory } = useCategoryManager();
     const { filteredTasks, filter, setFilter } = useTaskFilter(tasks);
     const { slicedItems, currentPage, totalPages, handlePageChange } = usePagination(filteredTasks, 10);
 
@@ -23,6 +25,7 @@ const TaskListContainer = () => {
                     tasks={slicedItems as Task[]}
                     nextTaskId={tasks[tasks.length - 1]?.id + 1 || 1}
                     onAdd={addTask}
+                    onAddCategory={addCategory}
                     onDelete={removeTask}
                     onToggle={updateTask}
                     isLoading={isLoading}
