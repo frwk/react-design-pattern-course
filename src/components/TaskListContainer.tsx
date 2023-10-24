@@ -15,8 +15,8 @@ import useObservable from "../hooks/useObservable";
 
 const TaskListContainer = () => {
     const { tasks, addTask, removeTask, updateTask, isLoading } = useTaskManager();
-    const { addCategory } = useCategoryManager();
-    const { filteredTasks, filter, setFilter } = useTaskFilter(tasks);
+    const { categories, addCategory } = useCategoryManager(tasks);
+    const { filteredTasks, filter, dispatch } = useTaskFilter(tasks);
     const { slicedItems, currentPage, totalPages, handlePageChange } = usePagination(filteredTasks, 10);
     const { open, message, severity, handleClose, handleOpen } = useSnackbar();
 
@@ -29,7 +29,7 @@ const TaskListContainer = () => {
 
     return (
         <>
-            <FilteredTask filter={filter} setFilter={setFilter}>
+            <FilteredTask filter={filter} dispatch={dispatch} categories={categories}>
                 <>
                     <TaskListView
                         tasks={slicedItems as Task[]}
