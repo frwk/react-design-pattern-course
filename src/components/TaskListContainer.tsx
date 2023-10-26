@@ -11,6 +11,7 @@ import CustomSnackbar from "./CustomSnackbar";
 import Pagination from './Pagination';
 import Task from "../types/Task";
 import useCategoryManager from "../hooks/useCategoryManager.ts";
+import useObservable from "../hooks/useObservable";
 
 const TaskListContainer = () => {
     const { tasks, addTask, removeTask, updateTask, isLoading } = useTaskManager();
@@ -19,15 +20,8 @@ const TaskListContainer = () => {
     const { slicedItems, currentPage, totalPages, handlePageChange } = usePagination(filteredTasks, 10);
     const { open, message, severity, handleClose, handleOpen } = useSnackbar();
 
-    useEffect(() => {
-        taskObservable.subscribe(handleOpen);
-        taskObservable.subscribe(logger);
-
-        return () => {
-            taskObservable.unsubscribe(handleOpen);
-            taskObservable.unsubscribe(logger);
-        };
-    }, [handleOpen]);
+    useObservable(taskObservable, handleOpen);
+    useObservable(taskObservable, logger);
 
     useEffect(() => {
         if (currentPage > totalPages && totalPages > 0) handlePageChange(currentPage - 1);
