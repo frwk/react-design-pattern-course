@@ -1,22 +1,30 @@
 import Task from '../types/Task';
 import TaskListViewProps from '../types/TaskListViewProps';
-import { Button, Card, CardActions, CardContent, Grid, Tooltip } from '@mui/material';
+import { Button, Card, CardActions, CardContent, Chip, Grid, Tooltip } from '@mui/material';
 import useUserContext from '../hooks/useUserContext';
 
-const TaskGridView = ({ tasks, nextTaskId, onAdd, onDelete, onToggle, isLoading }: TaskListViewProps) => {
+const TaskGridView = ({ tasks, nextTaskId, onAdd, onAddCategory, onDelete, onToggle, isLoading }: TaskListViewProps) => {
 
     const user = useUserContext();
 
     const handleAddTask = () => {
         if (!user) return;
         const title = prompt('Entrez le nom de la nouvelle tâche:');
+        const category = prompt('Entrez le nom de la catégorie');
         if (title) {
             onAdd({
                 id: nextTaskId,
                 title,
+                category,
                 completed: false,
                 userId: user.id
             });
+        }
+
+        if (category) {
+            onAddCategory({
+                title: category
+            })
         }
     };
 
@@ -40,7 +48,10 @@ const TaskGridView = ({ tasks, nextTaskId, onAdd, onDelete, onToggle, isLoading 
                         <Grid item xs={12} sm={6} lg={4} key={task.id}>
                             <Card variant="outlined" className={task.completed ? 'bg-green-500' : ''}>
                                 <CardContent>
-                                    {task.title}
+                                    <div className='flex items-center gap-2'>
+                                        <span>{task.title}</span>
+                                        {task.category && <Chip label={task.category} size="small" />}
+                                    </div>
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small" variant="contained" color="error" onClick={() => onDelete(task)}>Supprimer</Button>
