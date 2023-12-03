@@ -18,14 +18,15 @@ export default function UserComponent({ user, messages, onSendMessage }: UserCom
   return (
     <div>
       <h3>{user.name}'s Chat</h3>
-      <textarea value={messages.join('\n')} readOnly />
+      <textarea className="w-full h-32" value={messages.join('\n')} readOnly />
       <div>
         <input
+          className={"w-70"}
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
         />
-        <button onClick={handleSendMessage}>Send</button>
+        <button className="w-30" onClick={handleSendMessage}>Send</button>
       </div>
     </div>
   );
