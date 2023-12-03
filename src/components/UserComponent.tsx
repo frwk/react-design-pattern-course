@@ -1,34 +1,36 @@
+import { useState } from 'react';
 import {User} from "../types/User.ts";
-import {useState} from "react";
 
 interface UserComponentProps {
   user: User;
   messages: string[];
-  onSendMessage: (message: string) => void;
+  sendMessage: (message: string) => void;
 }
 
-export default function UserComponent({ user, messages, onSendMessage }: UserComponentProps) {
+export default function UserComponent({ user, messages, sendMessage }: UserComponentProps) {
   const [newMessage, setNewMessage] = useState('');
 
   const handleSendMessage = () => {
-    onSendMessage(newMessage);
+    sendMessage(newMessage);
     setNewMessage('');
   };
 
   return (
     <div>
       <h3>{user.name}'s Chat</h3>
-      <textarea className="w-full h-32" value={messages.join('\n')} readOnly />
+      <textarea value={messages.join('\n')} readOnly style={{ width: '100%', height: '150px' }} />
       <div>
         <input
           className={"w-70"}
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          style={{ width: '70%' }}
         />
-        <button className="w-30" onClick={handleSendMessage}>Send</button>
+        <button onClick={handleSendMessage} style={{ width: '30%' }}>
+          Send
+        </button>
       </div>
     </div>
   );
-}
-
+};
