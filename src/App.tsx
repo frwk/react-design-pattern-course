@@ -1,7 +1,6 @@
 import { CssBaseline, PaletteMode, ThemeProvider, createTheme } from '@mui/material'
 import Home from './pages/Home';
 import Header from './components/layout/Header';
-import UserProvider from './components/providers/UserProvider';
 
 function App() {
 
@@ -21,10 +20,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
-        <UserProvider>
           <Header/>
           <Home />
-        </UserProvider>
       </CssBaseline>
     </ThemeProvider>
   )
